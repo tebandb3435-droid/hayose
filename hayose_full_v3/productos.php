@@ -1,0 +1,11 @@
+<?php
+session_start();
+include 'db.php';
+$products = [];
+$sql = "SELECT p.*, COALESCE(AVG(r.rating),0) AS avg_rating, COUNT(r.id) AS reviews_count FROM productos p LEFT JOIN reseñas r ON p.id = r.producto_id GROUP BY p.id ORDER BY p.id ASC";
+$res = $conn->query($sql);
+while($row = $res->fetch_assoc()) { $products[] = $row; }
+?>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name='viewport' content='width=device-width,initial-scale=1'><title>Productos</title><link rel='stylesheet' href='css/style.css'></head><body>
+<header><div class='logo'>HA'YOSÊ</div><nav class='nav' id='nav-menu'><ul><li><a href='index.php'>Inicio</a></li><li><a href='productos.php' class='active'>Nuestros Productos</a></li></ul></nav><div class='hamburger' id='hamburger'>&#9776;</div></header>
+<main class='productos'><h2>Nuestros Productos</h2><div class='grid'><?php foreach($products as $p): ?><div class='card'><img src='images/<?php echo htmlspecialchars($p['imagen']); ?>' alt=''><h3><?php echo htmlspecialchars($p['nombre']); ?></h3><p class='price'>$<?php echo number_format($p['precio'],2,',','.'); ?></p><p class='rating'><?php $avg = round($p['avg_rating'],1); for($i=1;$i<=5;$i++){ if($i <= floor($avg)) echo '★'; else echo '☆'; } ?> (<?php echo $p['reviews_count']; ?>)</p><p><?php echo nl2br(htmlspecialchars($p['descripcion'])); ?></p><div class='actions'><form method='POST' action='agregar_carrito.php' onsubmit='return checkSession();'><input type='hidden' name='producto_id' value='<?php echo $p['id']; ?>'><button type='submit'>Añadir al carrito</button></form><button onclick="location.href='producto_detalle.php?id=<?php echo $p['id']; ?>'">Ver detalles</button></div></div><?php endforeach; ?></div></main><footer><p>HA'YOSÊ © 2025</p></footer><canvas id='matrix'></canvas><script src='js/matrix.js'></script><script>function checkSession(){var xhr=new XMLHttpRequest();xhr.open('GET','check_session.php',false);xhr.send(null);if(xhr.status===200){var r=JSON.parse(xhr.responseText);if(!r.logged){window.location.href='login.php';return false;}return true;}return false;}</script></body></html>
