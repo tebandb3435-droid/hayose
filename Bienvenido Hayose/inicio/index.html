@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HA'YOSÊ</title>
+  <link rel="stylesheet" href="Stilohayose.css">
+</head>
+<body>
+
+  <!-- Encabezado -->
+  <h1>HA ' YOSÊ</h1>
+  <p>
+    Hace años me editaron una foto y desde entonces veo la palabra Hayose...
+    pero no recuerdo dónde ni cuándo.  
+    ¿Y ustedes?
+  </p>
+
+  <!-- Botones estilo encuesta -->
+  <button class="green">✔ Sí, me ha pasado.</button>
+  <button class="blue">🤷 Me suena, pero no sé</button>
+  <button class="red">✖ Nunca lo he visto.</button>
+  <button class="purple">👀 Ahora me dio curiosidad</button>
+
+  <!-- Íconos sociales -->
+  <div class="social-icons">
+    <a href="#" target="_blank">📺</a>
+    <a href="#" target="_blank">📘</a>
+    <a href="#" target="_blank">📷</a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>Todos los derechos reservados HA'YOSÊ 2025 ©</p>
+    <p>Powered by Innova Futura SAS 3219275425</p>
+    <p>This HTML5 Template was created with Nicepage</p>
+  </footer>
+
+  <!-- Canvas Matrix -->
+  <canvas id="matrix"></canvas>
+
+  <!-- Script Matrix -->
+  <script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    // Tamaño pantalla
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    // Caracteres Matrix
+    const letters = "アァイィウヴエェオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヰヱヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const lettersArray = letters.split("");
+
+    const fontSize = 16;
+    const columns = canvas.width / fontSize; 
+    const drops = [];
+
+    for (let x = 0; x < columns; x++) {
+      drops[x] = 1;
+    }
+
+    function draw() {
+      // Fondo negro translúcido
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#0F0"; // Verde Matrix
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = lettersArray[Math.floor(Math.random() * lettersArray.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 35);
+
+    // Ajustar tamaño si se cambia la ventana
+    window.addEventListener("resize", () => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+  </script>
+
+</body>
+</html>
